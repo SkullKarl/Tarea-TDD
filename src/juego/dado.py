@@ -10,5 +10,16 @@ class Dado:
         self.cara = random.randint(1, 6)
 
     def pintar(self):
-        return
-
+        match self.cara:
+            case 1:
+                self.pinta = "As"
+            case 2:
+                self.pinta = "Tonto"
+            case 3:
+                self.pinta = "Tren"
+            case 4:
+                self.pinta = "Cuadra"
+            case 5:
+                self.pinta = "Quina"
+            case 6:
+                self.pinta = "Sexto"
