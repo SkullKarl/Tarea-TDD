@@ -6,3 +6,4 @@ class Dado:
         self.cara = 1
 
     def lanzar(self):
+        self.cara = random.randint(1, 6)
