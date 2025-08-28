@@ -1,7 +1,7 @@
 import os
 import sys
 from src.juego.dado import Dado
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../src")))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 def test_lanzar():
     dado = Dado()
     dado.lanzar()
