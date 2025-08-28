@@ -6,3 +6,13 @@ class GestorPartida:
 
     def IniciarPartida(self):
         return
+
+    def IniciarRonda(self):
+        return
+
+    """Un dado en juego (obligar)"""
+    def obligar(self):
+        return
+
+    def FinalizarPartida(self):
+        return
