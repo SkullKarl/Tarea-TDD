@@ -7,8 +7,8 @@ def test_lanzar():
     dado.lanzar()
     assert dado.cara in [1, 2, 3, 4, 5, 6]
 
-"""def test_pinta():
+def test_pinta():
     dado = Dado()
     dado.lanzar()
     dado.pintar()
-    assert dado.pinta in ["As", "Tonto", "Tren", "Cuadra", "Quina", "Sexto"]"""
+    assert dado.pinta in ["As", "Tonto", "Tren", "Cuadra", "Quina", "Sexto"]
