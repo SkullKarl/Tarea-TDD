@@ -1,25 +1,21 @@
 import random
+from enum import Enum
+
+class Pintas(Enum):
+    As = 1
+    Tonto = 2
+    Tren = 3
+    Cuadra = 4
+    Quina = 5
+    Sexto = 6
 
 class Dado:
 
     def __init__(self):
+        self.cara = 0
+        self.pinta = 'P'
         self.lanzar()
-        self.pintar()
 
     def lanzar(self):
         self.cara = random.randint(1, 6)
-
-    def pintar(self):
-        match self.cara:
-            case 1:
-                self.pinta = "As"
-            case 2:
-                self.pinta = "Tonto"
-            case 3:
-                self.pinta = "Tren"
-            case 4:
-                self.pinta = "Cuadra"
-            case 5:
-                self.pinta = "Quina"
-            case 6:
-                self.pinta = "Sexto"
+        self.pinta = Pintas(self.cara).name
