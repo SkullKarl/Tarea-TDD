@@ -18,3 +18,11 @@ def test_agitar_cacho():
     valores_revueltos = [d.GetDenominacion() for d in dados]
 
     assert valores_iniciales != valores_revueltos
+
+def test_mostrar_ocultar_cacho():
+   cacho = Cacho()
+   saved_dados = cacho.__str__()
+   cacho.ocultar()
+   assert cacho.__str__() == "Ocultos" 
+   cacho.mostrar()
+   assert cacho.__str__() == ' '.join([d.GetDenominacion() for d in cacho.dados])
