@@ -28,7 +28,7 @@ def test_mostrar_ocultar_cacho():
     cacho = Cacho()
     cacho.ocultar()
     dados = cacho.GetDados()
-    assert dado is None
+    assert dados is None
     cacho.mostrar()
     dados = cacho.GetDados()
 
