@@ -23,3 +23,14 @@ def test_agitar_cacho():
     caras_despues = [dado.cara for dado in dados_despues]
 
     assert caras_antes != caras_despues
+
+def test_mostrar_ocultar_cacho():
+    cacho = Cacho()
+    cacho.ocultar()
+    dados = cacho.GetDados()
+    assert dado is None
+    cacho.mostrar()
+    dados = cacho.GetDados()
+
+    for dado in dados:
+        assert isinstance(dado, Dado)
