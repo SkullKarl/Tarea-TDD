@@ -7,3 +7,7 @@ class Cacho:
 
     def GetDados(self):
         return self.__dado
+
+    def agitar(self):
+        for dado in self.__dado:
+            dado.lanzar()
