@@ -61,19 +61,26 @@ def test_dudar_pierde_jugador_apostador(arbitro):
     assert resultado["jugador_perdedor"] == jugador_apostador
     assert resultado["total_pintas"] == 5
 
-# =========================================== Tests calzar sin validación ===========================================
+# =========================================== Tests calzar ===========================================
 
-# Test calzar mínimo, sin contar el mock de validar ni reglas especiales
 def test_calzar_exito(arbitro):
     arbitro._mock_contador.contar_pintas.return_value = 6
     apuesta_actual = {"pinta": 3, "cantidad": 6, "jugador": "J1"}  # J1 apostó 6 trenes
     jugador_calzador = "J2" # J2 intenta calzar
 
+    cacho1 = arbitro.cacho_jugadores[0]
+    cacho2 = arbitro.cacho_jugadores[1]
+    cacho3 = arbitro.cacho_jugadores[2]
+
+    cacho1.obtener_dados.return_value = [1, 2, 1, 2]
+    cacho2.obtener_dados.return_value = [3, 4]
+    cacho3.obtener_dados.return_value = [5, 6]
+
     resultado = arbitro.calzar(
         apuesta_actual=apuesta_actual,
         jugador_calzador=jugador_calzador
     )
-
+    
     assert resultado["jugador_ganador"] == jugador_calzador
     assert resultado["jugador_perdedor"] == None
     assert resultado["total_pintas"] == 6
@@ -84,6 +91,14 @@ def test_calzar_fracaso(arbitro):
     apuesta_actual = {"pinta": 3, "cantidad": 5, "jugador": "J1"}  # J1 apostó 5 trenes
     jugador_calzador = "J2" # J2 intenta calzar
 
+    cacho1 = arbitro.cacho_jugadores[0]
+    cacho2 = arbitro.cacho_jugadores[1]
+    cacho3 = arbitro.cacho_jugadores[2]
+
+    cacho1.obtener_dados.return_value = [1, 2, 1, 2]
+    cacho2.obtener_dados.return_value = [3, 4]
+    cacho3.obtener_dados.return_value = [5, 6]
+
     resultado = arbitro.calzar(
         apuesta_actual=apuesta_actual,
         jugador_calzador=jugador_calzador
@@ -92,6 +107,23 @@ def test_calzar_fracaso(arbitro):
     assert resultado["jugador_ganador"] == None
     assert resultado["jugador_perdedor"] == jugador_calzador
     assert resultado["total_pintas"] == 4
+
+def test_calzar_llama_puede_calzar(arbitro, mocker):
+    spy = mocker.spy(arbitro, "puede_calzar")
+    apuesta_actual = {"pinta": 3, "cantidad": 2, "jugador": "J1"}
+    jugador_calzador = "J2"
+
+    cacho1 = arbitro.cacho_jugadores[0]
+    cacho2 = arbitro.cacho_jugadores[1]
+    cacho3 = arbitro.cacho_jugadores[2]
+
+    cacho1.obtener_dados.return_value = [1, 2, 1, 2]
+    cacho2.obtener_dados.return_value = [3, 4]
+    cacho3.obtener_dados.return_value = [5, 6]
+
+    # Verificamos que puede_calzar sea llamada una vez
+    arbitro.calzar(apuesta_actual, jugador_calzador)
+    assert spy.call_count == 1
 
 # =========================================== Tests de puede_calzar ===========================================
 
