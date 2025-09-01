@@ -1,12 +1,12 @@
 from src.juego.dado import Dado
 from src.juego.contador_pintas import ContadorPintas
-from src.juego.validador_apuesta import ValidadorApuesta
 
 class ArbitroRonda:
     def __init__(self, jugadores, cacho_jugadores):
         self.jugadores = jugadores
         self.cacho_jugadores = cacho_jugadores
         self.contador = ContadorPintas(cacho_jugadores)
+        self.ronda_especial = False # Si es true los ases no serán comodines
 
     # ======================= Funciones auxiliares =======================
     def _mostrar_cachos(self):
@@ -21,7 +21,10 @@ class ArbitroRonda:
     def dudar(self, pinta_cantada, cantidad_cantada, jugador_apostador, jugador_dudor):
         self._mostrar_cachos()
         
-        total_pintas = self.contador.contar_pintas(pinta_cantada)
+        total_pintas = self.contador.contar_pintas(
+            pinta_cantada,
+            contar_ases_como_comodines=not self.ronda_especial
+        )
 
         # Determinar ganador y perdedor
         if total_pintas >= cantidad_cantada:
@@ -50,7 +53,10 @@ class ArbitroRonda:
 
         self._mostrar_cachos()
 
-        total_pintas = self.contador.contar_pintas(pinta_cantada)
+        total_pintas = self.contador.contar_pintas(
+            pinta_cantada,
+            contar_ases_como_comodines=not self.ronda_especial
+        )
 
         # Si calza exactamente, gana el calzador
         if total_pintas == cantidad_cantada:
