@@ -1,5 +1,6 @@
 import pytest
 from src.juego.arbitro_ronda import ArbitroRonda
+from src.juego.validador_apuesta import ValidadorApuesta
 
 @pytest.fixture
 def arbitro(mocker):
@@ -60,5 +61,32 @@ def test_dudar_pierde_jugador_apostador(arbitro):
     assert resultado["jugador_perdedor"] == jugador_apostador
     assert resultado["total_pintas"] == 5
 
+# =========================================== Tests calzar ===========================================
+
+# Test calzar mínimo, sin contar el mock de validar ni reglas especiales
+def test_calzar_exito(arbitro):
+    apuesta_actual = {"pinta": 3, "cantidad": 6, "jugador": "J1"}  # J1 apostó 6 trenes
+    jugador_calzador = "J2" # J2 intenta calzar
+
+    resultado = arbitro.calzar(
+        apuesta_actual=apuesta_actual,
+        jugador_calzador=jugador_calzador
+    )
+
+    assert resultado["jugador_gana"] == jugador_calzador
+    assert resultado["jugador_perdedor"] == None
+    assert resultado["total_pintas"] == 6
 
 
+def test_calzar_fracaso(arbitro):
+    apuesta_actual = {"pinta": 3, "cantidad": 5, "jugador": "J1"}  # J1 apostó 5 trenes
+    jugador_calzador = "J2" # J2 intenta calzar
+
+    resultado = arbitro.calzar(
+        apuesta_actual=apuesta_actual,
+        jugador_calzador=jugador_calzador
+    )
+
+    assert resultado["jugador_gana"] == None
+    assert resultado["jugador_perdedor"] == jugador_calzador
+    assert resultado["total_pintas"] == 4
