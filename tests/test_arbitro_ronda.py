@@ -204,3 +204,62 @@ def test_puede_calzar_no_cumple_ninguna_condicion(arbitro):
     # J1 está calzando pero no tiene un solo dado, ni hay suficientes dados, 
     # no cumple condición para calzar
     assert arbitro.puede_calzar(jugador_calzador="J1", cacho_jugadores=arbitro.cacho_jugadores) == False
+
+
+# =========================================== Tests de ronda especial ===========================================
+'''
+Estos tests abarcan el caso donde estamos en una ronda obligada. El gestor modificará
+un atributo de la clase ArbitroRonda para reflejarlo
+'''
+
+def test_dudar_ronda_especial_ases_no_son_comodines_pierde_apostador(arbitro):
+    arbitro.ronda_especial = True
+    pinta_cantada = 3
+    cantidad_cantada = 4
+    jugador_apostador = "J1"
+    jugador_dudor = "J2"
+
+    # Mockeamos el contador para simular que, SIN contar ases, hay 3 pintas
+    arbitro._mock_contador.contar_pintas.return_value = 3
+
+    jugador_ganador, jugador_perdedor, total_pintas = arbitro.dudar(
+        pinta_cantada=pinta_cantada,
+        cantidad_cantada=cantidad_cantada,
+        jugador_apostador=jugador_apostador,
+        jugador_dudor=jugador_dudor
+    )
+
+    assert jugador_ganador == jugador_dudor  # Como hay menos pintas, pierde el apostador
+    assert jugador_perdedor == jugador_apostador
+    assert total_pintas == 3
+    arbitro._mock_contador.contar_pintas.assert_called_once_with(
+        pinta_cantada,
+        contar_ases_como_comodines=False
+    )
+
+def test_dudar_ronda_especial_ases_no_son_comodines_pierde_dudor(arbitro):
+    arbitro.ronda_especial = True
+    pinta_cantada = 3
+    cantidad_cantada = 3
+    jugador_apostador = "J1"
+    jugador_dudor = "J2"
+
+    # Mockeamos el contador para simular que, SIN contar ases, hay 3 pintas
+    arbitro._mock_contador.contar_pintas.return_value = 3
+
+    jugador_ganador, jugador_perdedor, total_pintas = arbitro.dudar(
+        pinta_cantada=pinta_cantada,
+        cantidad_cantada=cantidad_cantada,
+        jugador_apostador=jugador_apostador,
+        jugador_dudor=jugador_dudor
+    )
+
+    assert jugador_ganador == jugador_apostador  # Como hay menos pintas, pierde el dudor
+    assert jugador_perdedor == jugador_dudor
+    assert total_pintas == 3
+    arbitro._mock_contador.contar_pintas.assert_called_once_with(
+        pinta_cantada,
+        contar_ases_como_comodines=False
+    )
+
+    
