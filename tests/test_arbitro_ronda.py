@@ -61,7 +61,7 @@ def test_dudar_pierde_jugador_apostador(arbitro):
     assert resultado["jugador_perdedor"] == jugador_apostador
     assert resultado["total_pintas"] == 5
 
-# =========================================== Tests calzar ===========================================
+# =========================================== Tests calzar sin validación ===========================================
 
 # Test calzar mínimo, sin contar el mock de validar ni reglas especiales
 def test_calzar_exito(arbitro):
@@ -92,3 +92,63 @@ def test_calzar_fracaso(arbitro):
     assert resultado["jugador_ganador"] == None
     assert resultado["jugador_perdedor"] == jugador_calzador
     assert resultado["total_pintas"] == 4
+
+# =========================================== Tests de puede_calzar ===========================================
+
+def test_puede_calzar_cumple_condicion_mitad(arbitro):
+    """
+    Se puede calzar solo si la cantidad total de dados en juego es
+    menor o igual a la mitad de los dados iniciales o cuando el jugador
+    que calza le queda solo un dado
+    """
+    cacho1 = arbitro.cacho_jugadores[0]
+    cacho2 = arbitro.cacho_jugadores[1]
+    cacho3 = arbitro.cacho_jugadores[2]
+
+    cacho1.obtener_dados.return_value = [1, 2, 1, 2]
+    cacho2.obtener_dados.return_value = [3, 4]
+    cacho3.obtener_dados.return_value = [5, 6]
+
+    # 3 jugadores * 5 dados = 15 dados iniciales
+    # Mitad de dados iniciales = 7.5 ~ 7
+    # Dados en juego: 8 (cumple condición para calzar)
+    assert arbitro.puede_calzar(jugador_calzador="J1", cacho_jugadores=arbitro.cacho_jugadores) == True
+
+def test_puede_calzar_no_cumple_condicion_mitad(arbitro):
+    cacho1 = arbitro.cacho_jugadores[0]
+    cacho2 = arbitro.cacho_jugadores[1]
+    cacho3 = arbitro.cacho_jugadores[2]
+
+    cacho1.obtener_dados.return_value = [1, 2]
+    cacho2.obtener_dados.return_value = [3, 4]
+    cacho3.obtener_dados.return_value = [5, 6]
+
+    # 3 jugadores * 5 dados = 15 dados iniciales
+    # Mitad de dados iniciales = 7.5 ~ 7
+    # Dados en juego: 6, no cumple condición para calzar
+    assert arbitro.puede_calzar(jugador_calzador="J1", cacho_jugadores=arbitro.cacho_jugadores) == False
+
+def test_puede_calzar_cumple_condicion_un_dado(arbitro):
+    cacho1 = arbitro.cacho_jugadores[0]
+    cacho2 = arbitro.cacho_jugadores[1]
+    cacho3 = arbitro.cacho_jugadores[2]
+
+    cacho1.obtener_dados.return_value = [3]
+    cacho2.obtener_dados.return_value = [3, 4]
+    cacho3.obtener_dados.return_value = [5, 6]
+
+    # J1 está calzando y tiene un dado, cumple condición para calzar
+    assert arbitro.puede_calzar(jugador_calzador="J1", cacho_jugadores=arbitro.cacho_jugadores) == True
+
+def test_puede_calzar_no_cumple_ninguna_condicion(arbitro):
+    cacho1 = arbitro.cacho_jugadores[0]
+    cacho2 = arbitro.cacho_jugadores[1]
+    cacho3 = arbitro.cacho_jugadores[2]
+
+    cacho1.obtener_dados.return_value = [3, 4]
+    cacho2.obtener_dados.return_value = [3, 4]
+    cacho3.obtener_dados.return_value = [5, 6]
+
+    # J1 está calzando pero no tiene un solo dado, ni hay suficientes dados, 
+    # no cumple condición para calzar
+    assert arbitro.puede_calzar(jugador_calzador="J1", cacho_jugadores=arbitro.cacho_jugadores) == False
