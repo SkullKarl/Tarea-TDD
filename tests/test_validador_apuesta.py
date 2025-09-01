@@ -69,3 +69,19 @@ def test_apuesta_caso_ases():
     apuesta_anterior = (8, "As")
     apuesta_nueva = (5, "As")
     assert False == validador.esValido(apuesta_anterior, apuesta_nueva)
+
+def test_primera_apuesta_de_un_turno():
+    validador = ValidadorApuesta()
+
+    apuesta_inicial = (5, "Tren")
+    cant_dados = 5
+    assert True == validador.esPrimerApuestaDelTurnoValida(apuesta_inicial,cant_dados)
+
+    apuesta_inicial = (1, "As")
+    cant_dados = 5
+    assert False == validador.esPrimerApuestaDelTurnoValida(apuesta_inicial,cant_dados)
+
+    apuesta_inicial = (1, "As")
+    cant_dados = 1
+    assert True == validador.esPrimerApuestaDelTurnoValida(apuesta_inicial,cant_dados)
+
