@@ -1,5 +1,5 @@
 import math
-from juego.dado import Pintas
+from .dado import Pintas
 
 class ValidadorApuesta:
     def esPrimerApuestaDelTurnoValida(self, apuesta,cant_dados):
