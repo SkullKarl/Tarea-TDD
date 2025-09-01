@@ -1,5 +1,6 @@
 from src.juego.dado import Dado
 from src.juego.contador_pintas import ContadorPintas
+from src.juego.validador_apuesta import ValidadorApuesta
 
 class ArbitroRonda:
     def __init__(self, jugadores, cacho_jugadores):
@@ -7,13 +8,18 @@ class ArbitroRonda:
         self.cacho_jugadores = cacho_jugadores
         self.contador = ContadorPintas(cacho_jugadores)
 
-    def dudar(self, apuesta_actual, jugador_dudor):
-        pinta_cantada = apuesta_actual["pinta"]
-        cantidad_cantada = apuesta_actual["cantidad"]
-        jugador_apostador = apuesta_actual["jugador"]
-
+    # ======================= Funciones auxiliares =======================
+    def _mostrar_cachos(self):
         for cacho in self.cacho_jugadores:
             cacho.mostrar()
+
+    def _ocultar_cachos(self):
+        for cacho in self.cacho_jugadores:
+            cacho.ocultar()
+
+    # ========================== Función dudar ===========================
+    def dudar(self, pinta_cantada, cantidad_cantada, jugador_apostador, jugador_dudor):
+        self._mostrar_cachos()
         
         total_pintas = self.contador.contar_pintas(pinta_cantada)
 
@@ -27,28 +33,22 @@ class ArbitroRonda:
             jugador_perdedor = jugador_apostador
             jugador_ganador = jugador_dudor
 
-        for cacho in self.cacho_jugadores:
-            cacho.ocultar()
+        self._ocultar_cachos()
 
-        return {
-            "jugador_ganador": jugador_ganador,
-            "jugador_perdedor": jugador_perdedor,
-            "total_pintas": total_pintas
-        }
+        return jugador_ganador, jugador_perdedor, total_pintas
     
-    def calzar(self, apuesta_actual, jugador_calzador):
+    # ========================== Función calzar ==========================
+    def calzar(self, pinta_cantada, cantidad_cantada, jugador_calzador):
+        # Si no se puede calzar en este turno, no altera nada
+        # (evaluar proximamente si a gestor_partida le sirve una exception aquí)
         if self.puede_calzar(jugador_calzador, self.cacho_jugadores) == False:
-            return {
-                "jugador_ganador": None,
-                "jugador_perdedor": None,
-                "total_pintas": 0
-            }
-        
-        pinta_cantada = apuesta_actual["pinta"]
-        cantidad_cantada = apuesta_actual["cantidad"]
+            jugador_ganador = None
+            jugador_perdedor = None
+            total_pintas = 0
 
-        for cacho in self.cacho_jugadores:
-            cacho.mostrar()
+            return jugador_ganador, jugador_perdedor, total_pintas
+
+        self._mostrar_cachos()
 
         total_pintas = self.contador.contar_pintas(pinta_cantada)
 
@@ -60,15 +60,10 @@ class ArbitroRonda:
             jugador_ganador = None
             jugador_perdedor = jugador_calzador
 
-        for cacho in self.cacho_jugadores:
-            cacho.ocultar()
-
-        return {
-            "jugador_ganador": jugador_ganador,
-            "jugador_perdedor": jugador_perdedor,
-            "total_pintas": total_pintas
-        }
+        self._ocultar_cachos()
+        return jugador_ganador, jugador_perdedor, total_pintas
     
+    # ================ Función de validación para calzar =================
     def puede_calzar(self, jugador_calzador, cacho_jugadores):
         total_dados = sum(len(cacho.obtener_dados()) for cacho in cacho_jugadores)
         dados_iniciales = len(cacho_jugadores) * 5

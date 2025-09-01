@@ -26,20 +26,24 @@ def test_dudar_pierde_jugador_dudor(arbitro):
     pierde el jugador que duda
     """
     arbitro._mock_contador.contar_pintas.return_value = 7 # Hay 7 trenes reales, contando comodines
-    apuesta_actual = {"pinta" : 3, "cantidad" : 6, "jugador": "J1"}  # J1 apostó 6 trenes
-    jugador_apostador = apuesta_actual["jugador"]
+    # Datos de la apuesta actual: J1 apostó 6 trenes
+    pinta_cantada = 3
+    cantidad_cantada = 6
+    jugador_apostador = "J1"
     jugador_dudor = "J2" # jugador que dudó de esa apuesta
 
-    resultado = arbitro.dudar(
-        apuesta_actual=apuesta_actual,
+    jugador_ganador, jugador_perdedor, total_pintas = arbitro.dudar(
+        pinta_cantada=pinta_cantada,
+        cantidad_cantada=cantidad_cantada,
+        jugador_apostador=jugador_apostador,
         jugador_dudor=jugador_dudor
     )
 
     # luego, asumimos que la función dudar de arbitro_ronda retornará un diccionario con
     # quién gana, quien pierde y la cantidad real
-    assert resultado["jugador_ganador"] == jugador_apostador
-    assert resultado["jugador_perdedor"] == jugador_dudor
-    assert resultado["total_pintas"] == 7
+    assert jugador_ganador == jugador_apostador
+    assert jugador_perdedor == jugador_dudor
+    assert total_pintas == 7
 
 
 def test_dudar_pierde_jugador_apostador(arbitro):
@@ -48,24 +52,30 @@ def test_dudar_pierde_jugador_apostador(arbitro):
     pierde el jugador que apostó
     """
     arbitro._mock_contador.contar_pintas.return_value = 5 # Hay 5 trenes reales, contando comodines
-    apuesta_actual = {"pinta" : 3, "cantidad" : 6, "jugador": "J1"}  # J1 apostó 6 trenes
-    jugador_apostador = apuesta_actual["jugador"]
+    # Datos de la apuesta actual: J1 apostó 6 trenes
+    pinta_cantada = 3
+    cantidad_cantada = 6
+    jugador_apostador = "J1"
     jugador_dudor = "J2" # jugador que dudó de esa apuesta
 
-    resultado = arbitro.dudar(
-        apuesta_actual=apuesta_actual,
+    jugador_ganador, jugador_perdedor, total_pintas = arbitro.dudar(
+        pinta_cantada=pinta_cantada,
+        cantidad_cantada=cantidad_cantada,
+        jugador_apostador=jugador_apostador,
         jugador_dudor=jugador_dudor
     )
 
-    assert resultado["jugador_ganador"] == jugador_dudor
-    assert resultado["jugador_perdedor"] == jugador_apostador
-    assert resultado["total_pintas"] == 5
+    assert jugador_ganador == jugador_dudor
+    assert jugador_perdedor == jugador_apostador
+    assert total_pintas == 5
 
 # =========================================== Tests calzar ===========================================
 
 def test_calzar_exito(arbitro):
     arbitro._mock_contador.contar_pintas.return_value = 6
-    apuesta_actual = {"pinta": 3, "cantidad": 6, "jugador": "J1"}  # J1 apostó 6 trenes
+    # Datos de la apuesta actual: jugador previo apostó 6 trenes
+    pinta_cantada = 3
+    cantidad_cantada = 6
     jugador_calzador = "J2" # J2 intenta calzar
 
     cacho1 = arbitro.cacho_jugadores[0]
@@ -76,19 +86,22 @@ def test_calzar_exito(arbitro):
     cacho2.obtener_dados.return_value = [3, 4]
     cacho3.obtener_dados.return_value = [5, 6]
 
-    resultado = arbitro.calzar(
-        apuesta_actual=apuesta_actual,
+    jugador_ganador, jugador_perdedor, total_pintas = arbitro.calzar(
+        pinta_cantada=pinta_cantada,
+        cantidad_cantada=cantidad_cantada,
         jugador_calzador=jugador_calzador
     )
     
-    assert resultado["jugador_ganador"] == jugador_calzador
-    assert resultado["jugador_perdedor"] == None
-    assert resultado["total_pintas"] == 6
+    assert jugador_ganador == jugador_calzador
+    assert jugador_perdedor == None
+    assert total_pintas == 6
 
 
 def test_calzar_fracaso(arbitro):
     arbitro._mock_contador.contar_pintas.return_value = 4
-    apuesta_actual = {"pinta": 3, "cantidad": 5, "jugador": "J1"}  # J1 apostó 5 trenes
+    # Datos de la apuesta actual: jugador previo apostó 5 trenes
+    pinta_cantada = 3
+    cantidad_cantada = 5
     jugador_calzador = "J2" # J2 intenta calzar
 
     cacho1 = arbitro.cacho_jugadores[0]
@@ -99,19 +112,22 @@ def test_calzar_fracaso(arbitro):
     cacho2.obtener_dados.return_value = [3, 4]
     cacho3.obtener_dados.return_value = [5, 6]
 
-    resultado = arbitro.calzar(
-        apuesta_actual=apuesta_actual,
+    jugador_ganador, jugador_perdedor, total_pintas = arbitro.calzar(
+        pinta_cantada=pinta_cantada,
+        cantidad_cantada=cantidad_cantada,
         jugador_calzador=jugador_calzador
     )
 
-    assert resultado["jugador_ganador"] == None
-    assert resultado["jugador_perdedor"] == jugador_calzador
-    assert resultado["total_pintas"] == 4
+    assert jugador_ganador == None
+    assert jugador_perdedor == jugador_calzador
+    assert total_pintas == 4
 
 def test_calzar_llama_puede_calzar(arbitro, mocker):
     spy = mocker.spy(arbitro, "puede_calzar")
-    apuesta_actual = {"pinta": 3, "cantidad": 2, "jugador": "J1"}
-    jugador_calzador = "J2"
+    # Datos de la apuesta actual: el jugador previo apostó 2 trenes
+    pinta_cantada = 3
+    cantidad_cantada = 2
+    jugador_calzador = "J2" # J2 intenta calzar
 
     cacho1 = arbitro.cacho_jugadores[0]
     cacho2 = arbitro.cacho_jugadores[1]
@@ -122,7 +138,11 @@ def test_calzar_llama_puede_calzar(arbitro, mocker):
     cacho3.obtener_dados.return_value = [5, 6]
 
     # Verificamos que puede_calzar sea llamada una vez
-    arbitro.calzar(apuesta_actual, jugador_calzador)
+    arbitro.calzar(
+        pinta_cantada=pinta_cantada,
+        cantidad_cantada=cantidad_cantada,
+        jugador_calzador=jugador_calzador
+    )
     assert spy.call_count == 1
 
 # =========================================== Tests de puede_calzar ===========================================
