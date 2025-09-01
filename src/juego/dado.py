@@ -20,4 +20,4 @@ class Dado:
         self.cara = random.randint(1, 6)
     
     def GetDenominacion(self):
-        return Pintas(self.cara).name 
+        return Pintas(self.cara).name
