@@ -65,6 +65,7 @@ def test_dudar_pierde_jugador_apostador(arbitro):
 
 # Test calzar mínimo, sin contar el mock de validar ni reglas especiales
 def test_calzar_exito(arbitro):
+    arbitro._mock_contador.contar_pintas.return_value = 6
     apuesta_actual = {"pinta": 3, "cantidad": 6, "jugador": "J1"}  # J1 apostó 6 trenes
     jugador_calzador = "J2" # J2 intenta calzar
 
@@ -73,12 +74,13 @@ def test_calzar_exito(arbitro):
         jugador_calzador=jugador_calzador
     )
 
-    assert resultado["jugador_gana"] == jugador_calzador
+    assert resultado["jugador_ganador"] == jugador_calzador
     assert resultado["jugador_perdedor"] == None
     assert resultado["total_pintas"] == 6
 
 
 def test_calzar_fracaso(arbitro):
+    arbitro._mock_contador.contar_pintas.return_value = 4
     apuesta_actual = {"pinta": 3, "cantidad": 5, "jugador": "J1"}  # J1 apostó 5 trenes
     jugador_calzador = "J2" # J2 intenta calzar
 
@@ -87,6 +89,6 @@ def test_calzar_fracaso(arbitro):
         jugador_calzador=jugador_calzador
     )
 
-    assert resultado["jugador_gana"] == None
+    assert resultado["jugador_ganador"] == None
     assert resultado["jugador_perdedor"] == jugador_calzador
     assert resultado["total_pintas"] == 4
