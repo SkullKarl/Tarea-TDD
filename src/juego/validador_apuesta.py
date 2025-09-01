@@ -1,30 +1,20 @@
 from juego.dado import Pintas
 
 class ValidadorApuesta:
-    def __init__(self):
-        pass
-
     def esValido(self, apuesta_anterior, apuesta_nueva):
-        cantidad_anterior, tipo_anterior = apuesta_anterior
-        cantidad_nueva, tipo_nueva = apuesta_nueva
+        cantidad_ant, tipo_ant = apuesta_anterior
+        cantidad_nue, tipo_nue = apuesta_nueva
 
-        tipo_anterior_int = Pintas[tipo_anterior].value
-        tipo_nueva_int = Pintas[tipo_nueva].value
+        valor_tipo_ant = Pintas[tipo_ant].value
+        valor_tipo_nue = Pintas[tipo_nue].value
 
-        if (cantidad_anterior > cantidad_nueva):
+        # No puede ser menor en cantidad o tipo
+        if cantidad_nue < cantidad_ant:
+            return False
+        if cantidad_nue == cantidad_ant and valor_tipo_nue <= valor_tipo_ant:
+            return False
+        if cantidad_nue > cantidad_ant and valor_tipo_nue < valor_tipo_ant:
             return False
 
-        if (tipo_anterior_int > tipo_nueva_int):
-            return False
-        
-        if (cantidad_anterior == cantidad_nueva and tipo_anterior == tipo_nueva):
-            return False
-
-        if(tipo_anterior_int < tipo_nueva_int and cantidad_anterior == cantidad_nueva):
-            return True
-        
-        if(tipo_anterior_int == tipo_nueva_int and cantidad_anterior < cantidad_nueva):
-            return True
-        
-        return False
-        
+        # Si pasa las validaciones anteriores, la apuesta es válida
+        return True
