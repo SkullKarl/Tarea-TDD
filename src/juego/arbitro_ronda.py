@@ -1,15 +1,5 @@
+from src.juego.dado import Dado
 from src.juego.contador_pintas import ContadorPintas
-
-'''
-cacho = Cacho()
-cacho.agitar()
-valores = [dado.cara for dado in cacho.GetDados()]
-print(valores)
-
-cacho._Cacho__dado = cacho._Cacho__dado[:4]
-cacho.agitar()
-print([dado.cara for dado in cacho.GetDados()])
-'''
 
 class ArbitroRonda:
     def __init__(self, jugadores, cacho_jugadores):
@@ -71,8 +61,20 @@ class ArbitroRonda:
             "jugador_perdedor": jugador_perdedor,
             "total_pintas": total_pintas
         }
-            
+    
+    def puede_calzar(self, jugador_calzador, cacho_jugadores):
+        total_dados = sum(len(cacho.obtener_dados()) for cacho in cacho_jugadores)
+        dados_iniciales = len(cacho_jugadores) * 5
 
-    def calzar_validacion(self):
-        pass
+        # Caso 1: mitad o mayor que dados iniciales
+        if total_dados >= dados_iniciales / 2:
+            return True
+
+        # Caso 2: jugador calzó con un solo dado
+        idx = self.jugadores.index(jugador_calzador)
+        if len(cacho_jugadores[idx].obtener_dados()) == 1:
+            return True
+
+        # Caso 3: no cumplimos condiciones para calzar
+        return False
     
