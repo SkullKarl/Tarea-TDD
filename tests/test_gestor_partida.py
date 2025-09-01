@@ -27,3 +27,12 @@ def test_obligar():
     jugador_con_un_dado = J[1]
     X = GP.obligar(jugador_con_un_dado)
     assert X == True
+
+def test_FinalizarPartida():
+    j = ['1', '2', '3']
+    J = [Cacho(), Cacho(), Cacho()]
+    A = ArbitroRonda(j, J)
+    GP = GestorPartida(A, J)
+    Ganador = GP.FinalizarPartida()
+    assert isinstance(Ganador, str)
+    assert Ganador in ['1', '2', '3']
