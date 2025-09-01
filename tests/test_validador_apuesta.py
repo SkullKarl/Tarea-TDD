@@ -54,11 +54,11 @@ def test_apuesta_caso_ases():
     # --------- DE ASES ---------
     #
     apuesta_anterior = (2, "As")
-    apuesta_nueva = (5, "Quinta")
+    apuesta_nueva = (5, "Quina")
     assert True == validador.esValido(apuesta_anterior, apuesta_nueva)
 
     apuesta_anterior = (2, "As")
-    apuesta_nueva = (4, "Quinta")
+    apuesta_nueva = (4, "Quina")
     assert False == validador.esValido(apuesta_anterior, apuesta_nueva)
 
     # --------- DE ASES HACIA ASES ---------
