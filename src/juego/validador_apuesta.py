@@ -2,6 +2,20 @@ import math
 from juego.dado import Pintas
 
 class ValidadorApuesta:
+    def esPrimerApuestaDelTurnoValida(self, apuesta,cant_dados):
+        cant_aposta, tipo_apuesta = apuesta
+
+        int_tipo_apuesta = Pintas[tipo_apuesta].value
+
+        if int_tipo_apuesta != 1:
+            return True
+
+        if int_tipo_apuesta == 1 and cant_dados == 1: 
+            return True
+
+        return False
+
+    
     def esValido(self, apuesta_anterior, apuesta_nueva):
         cantidad_ant, tipo_ant = apuesta_anterior
         cantidad_nue, tipo_nue = apuesta_nueva
