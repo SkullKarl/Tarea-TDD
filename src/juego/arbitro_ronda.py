@@ -37,6 +37,13 @@ class ArbitroRonda:
         }
     
     def calzar(self, apuesta_actual, jugador_calzador):
+        if self.puede_calzar(jugador_calzador, self.cacho_jugadores) == False:
+            return {
+                "jugador_ganador": None,
+                "jugador_perdedor": None,
+                "total_pintas": 0
+            }
+        
         pinta_cantada = apuesta_actual["pinta"]
         cantidad_cantada = apuesta_actual["cantidad"]
 
