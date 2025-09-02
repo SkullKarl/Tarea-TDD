@@ -1,38 +1,41 @@
 from src.juego.cacho import Cacho
-from src.juego.arbitro_ronda import ArbitroRonda
-from src.juego.gestor_partida import GestorPartida, Obligar
+from src.juego.gestor_partida import GestorPartida, ObligarOpciones
 
 def test_IniciarPartida():
-    j = ['1', '2', '3']
-    J = [Cacho(), Cacho(), Cacho()]
-    A = ArbitroRonda(j, J)
-    GP = GestorPartida(A, j, J)
+    j = ['Gustavo', 'Sebastian', 'Sofia', 'Slayer']
+    J = [Cacho(), Cacho(), Cacho(), Cacho()]
+    GP = GestorPartida(j, J)
     X = GP.IniciarPartida()
     assert isinstance(X, str)
-    assert X in ['1', '2', '3']
+    assert X in ['Gustavo', 'Sebastian', 'Sofia', 'Slayer']
 
-"""def test_JugarRonda():
-    j = ['1', '2', '3']
-    J = [Cacho(), Cacho(), Cacho()]
-    A = ArbitroRonda(j, J)
-    GP = GestorPartida(A, j, J)
-    X = GP.JugarRonda()
-    assert J != X
+def test_JugarRonda():
+    j = ['Gustavo', 'Sebastian', 'Sofia', 'Slayer']
+    J = [Cacho(), Cacho(), Cacho(), Cacho()]
+    GP = GestorPartida(j, J)
+    GP.JugarRonda(2, 3, 'Slayer', dudo=True, jugador_dudor='Gustavo')
+    GP.JugarRonda(3, 4, 'Gustavo', dudo=True, jugador_dudor='Sebastian')
+    for i in range (len(J)):
+        assert J[i] != GP.jugadores[i]
+    assert len(J[2].GetDados()) == GP.jugadores[2].GetDados()
 
 def test_obligar():
-    j = ['1', '2', '3']
-    J = [Cacho(), Cacho(), Cacho()]
-    J[1]
-    A = ArbitroRonda(j, J)
-    GP = GestorPartida(A, j, J)
-    X = GP.obligar(J[1], Obligar.Abierta)
+    j = ['Gustavo', 'Sebastian', 'Sofia', 'Slayer']
+    J = [Cacho(), Cacho(), Cacho(), Cacho()]
+    for i in range (4):
+        J[1].quitar_dado()
+    GP = GestorPartida(j, J)
+    X = GP.obligar(1, J[1], ObligarOpciones.Abierta)
     assert X == True
+    assert GP.rondaex == ObligarOpciones.Abierta
 
 def test_FinalizarPartida():
-    j = ['1', '2', '3']
-    J = [Cacho(), Cacho(), Cacho()]
-    A = ArbitroRonda(j, J)
-    GP = GestorPartida(A, j, J)
+    j = ['Gustavo', 'Sebastian', 'Sofia', 'Slayer']
+    J = [Cacho(), None, None, Cacho()]
+    for i in range (5):
+        J[0].quitar_dado()
+    GP = GestorPartida(j, J)
+    GP.JugarRonda(2, 3, 'Slayer')
     Ganador = GP.FinalizarPartida()
     assert isinstance(Ganador, str)
-    assert Ganador in ['1', '2', '3']"""
+    assert Ganador == 'Slayer'

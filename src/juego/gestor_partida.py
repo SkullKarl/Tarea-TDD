@@ -1,25 +1,26 @@
 import numpy
 from enum import Enum
-from.cacho import Cacho
+from .cacho import Cacho
 from .dado import Dado, Pintas
 from .arbitro_ronda import ArbitroRonda
 from .contador_pintas import ContadorPintas
 from .validador_apuesta import ValidadorApuesta
 
-class Obligar(Enum):
+class ObligarOpciones(Enum):
     No = 0
     Abierta = 1
     Cerrada = 2
 
 class GestorPartida:
 
-    def __init__(self, arbitro, nombres, jugadores):
-        self.arbitro = arbitro
+    def __init__(self, nombres, jugadores):
         self.nombres = nombres
         self.jugadores = jugadores
+        self.Arbitro = ArbitroRonda(nombres, jugadores)
         self.Contador = ContadorPintas(jugadores)
         self.Validador = ValidadorApuesta()
-        self.rondaex = Obligar.No
+        self.rondaex = ObligarOpciones.No
+        self.NoObligar = numpy.ones(len(self.jugadores))
 
     def IniciarPartida(self):
         D = Dado()
@@ -41,28 +42,64 @@ class GestorPartida:
         max_i = 0
         max_val = DadosIniciales[0]
 
-        for i in range(len(DadosIniciales)):
+        for i in range (len(DadosIniciales)):
             if DadosIniciales[i] > max_val:
                 max_val = DadosIniciales[i]
                 max_i = i
 
         return self.nombres[max_i]
 
-    """def JugarRonda(self):
+    def JugarRonda(self, pinta_cantada, cantidad_cantada, jugador_apostador, dudo=False, jugador_dudor='No'):
 
-        if obligar(self.jugadores[i]):
-            x
-        else:
+        for i in range (len(self.jugadores)):
+            if isinstance(self.jugadores[i], Cacho):
+                self.jugadores[i].agitar()
 
-        self.jugadores =
+        if self.rondaex != ObligarOpciones.No:
+            self.Arbitro.ronda_especial = True
 
-        return self.jugadores"""
+            if self.rondaex == ObligarOpciones.Abierta:
+                for i in range (len(self.jugadores)):
+                    if isinstance(self.jugadores[i], Cacho):
+                        self.jugadores[i].mostrar()
+            elif self.rondaex == ObligarOpciones.Cerrada:
+                for i in range (len(self.jugadores)):
+                    if isinstance(self.jugadores[i], Cacho):
+                        self.jugadores[i].ocultar()
+
+        p_c = pinta_cantada
+        c_c = cantidad_cantada
+        j_a = jugador_apostador
+        j_d = jugador_dudor
+
+        if dudo:
+            ganador, perdedor, pintas = self.Arbitro.dudar(p_c, c_c, j_a, j_d)
+            indexperdedor = self.nombres.index(perdedor)
+            self.jugadores[indexperdedor].quitar_dado()
+
+        for i in range (len(self.jugadores)):
+            if not any(isinstance(dado, Dado) for dado in self.jugadores[i].GetDados):
+                self.jugadores[i] = None
+
+        if self.rondaex != ObligarOpciones.No:
+            self.rondaex = ObligarOpciones.No
+            self.Arbitro.ronda_especial = False
+
+        return self.jugadores
 
     #Un dado en juego (obligar)
-    def obligar(self, jugador_con_un_dado, AC: Obligar):
+    def obligar(self, i_jugador_con_un_dado, jugador_con_un_dado, AC: ObligarOpciones):
+
+        #Un jugador solo puede obligar una vez por partida
+        if self.NoObligar[i_jugador_con_un_dado] == 0:
+            return False
+
+        if AC == ObligarOpciones.No:
+            return False
 
         if sum(1 for elem in jugador_con_un_dado.GetDados if isinstance(elem, Dado)) == 1:
             self.rondaex = AC
+            self.NoObligar[i_jugador_con_un_dado] = 0
             return True
 
         return False
