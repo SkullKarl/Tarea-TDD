@@ -20,3 +20,10 @@ class Cacho:
     
     def mostrar(self):
         self.__visible = True
+    
+    def agregar_dado(self):
+        self.__dado.append(Dado())
+
+    def quitar_dado(self):
+        if(len(self.__dado) > 0):
+            self.__dado.pop()
