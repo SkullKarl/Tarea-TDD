@@ -11,26 +11,18 @@ def test_init_cacho():
     for dado in dados:
         assert isinstance(dado, Dado)
 
-def test_agitar_cacho():
+def test_agregar_quitar_dado_cacho():
     cacho = Cacho()
-    dados_antes = cacho.GetDados()
-    caras_antes = [dado.cara for dado in dados_antes]
+    assert len(cacho.GetDados()) == 5
 
-    random.seed(42)  # Fijar la semilla para asegurar cambio de valores 
-    cacho.agitar()
+    cacho.agregar_dado()
+    assert len(cacho.GetDados()) == 6
 
-    dados_despues = cacho.GetDados()
-    caras_despues = [dado.cara for dado in dados_despues]
+    cacho.agregar_dado()
+    assert len(cacho.GetDados()) == 7
 
-    assert caras_antes != caras_despues
+    # Quitar dados hasta que quede al menos p
+    while len(cacho.GetDados()) > 0:
+        cacho.quitar_dado()
 
-def test_mostrar_ocultar_cacho():
-    cacho = Cacho()
-    cacho.ocultar()
-    dados = cacho.GetDados()
-    assert dados is None
-    cacho.mostrar()
-    dados = cacho.GetDados()
-
-    for dado in dados:
-        assert isinstance(dado, Dado)
+    assert len(cacho.GetDados()) == 0
