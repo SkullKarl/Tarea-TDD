@@ -36,13 +36,8 @@ class ArbitroRonda:
                 jugador_apostador : str,
                 jugador_dudor : str) -> tuple[str | None, str | None, int]:
 
-        cachos_anteriores = self.cacho_jugadores
-        self.cacho_jugadores = [c for c in self.cacho_jugadores if c is not None]
-
         self._mostrar_cachos()
         total_pintas = self._contar_pintas(pinta_cantada)
-
-        self.cacho_jugadores = cachos_anteriores
 
         # Determinar ganador y perdedor
         if total_pintas >= cantidad_cantada:
@@ -71,13 +66,8 @@ class ArbitroRonda:
 
             return jugador_ganador, jugador_perdedor, total_pintas
 
-        cachos_anteriores = self.cacho_jugadores
-        self.cacho_jugadores = [c for c in self.cacho_jugadores if c is not None]
-
         self._mostrar_cachos()
         total_pintas = self._contar_pintas(pinta_cantada)
-
-        self.cacho_jugadores = cachos_anteriores
 
         # Si calza exactamente, gana el calzador
         if total_pintas == cantidad_cantada:
