@@ -19,6 +19,7 @@ class GestorPartida:
         self.Arbitro = ArbitroRonda(nombres, jugadores)
         self.Contador = ContadorPintas(jugadores)
         self.Validador = ValidadorApuesta()
+        self.DadosAFavor = numpy.zeros(len(self.jugadores))
         self.rondaex = ObligarOpciones.No
         self.NoObligar = numpy.ones(len(self.jugadores))
 
@@ -49,7 +50,7 @@ class GestorPartida:
 
         return self.nombres[max_i]
 
-    def JugarRonda(self, pinta_cantada, cantidad_cantada, jugador_apostador, dudo=False, jugador_dudor='No'):
+    def JugarRonda(self, pinta_cantada, cantidad_cantada, jugador_apostador, dudo=False, jugador_dudor='No', calzar=False):
 
         for i in range (len(self.jugadores)):
             if isinstance(self.jugadores[i], Cacho):
@@ -77,8 +78,21 @@ class GestorPartida:
             indexperdedor = self.nombres.index(perdedor)
             self.jugadores[indexperdedor].quitar_dado()
 
+        if calzar:
+            if self.Arbitro.puede_calzar(j_d):
+                ganador, perdedor, pintas = self.Arbitro.calzar(p_c, c_c, j_d)
+                indexganador = self.nombres.index(ganador)
+
+                if len(self.jugadores[indexganador].GetDados()) == 5:
+                    self.DadosAFavor[indexganador] = self.DadosAFavor[indexganador] + 1
+                else:
+                    self.jugadores[indexganador].agregar_dado()
+
+                indexperdedor = self.nombres.index(perdedor)
+                self.jugadores[indexperdedor].quitar_dado()
+
         for i in range (len(self.jugadores)):
-            if not any(isinstance(dado, Dado) for dado in self.jugadores[i].GetDados):
+            if not any(isinstance(dado, Dado) for dado in self.jugadores[i].GetDados()):
                 self.jugadores[i] = None
 
         if self.rondaex != ObligarOpciones.No:
@@ -97,7 +111,7 @@ class GestorPartida:
         if AC == ObligarOpciones.No:
             return False
 
-        if sum(1 for elem in jugador_con_un_dado.GetDados if isinstance(elem, Dado)) == 1:
+        if sum(1 for elem in jugador_con_un_dado.GetDados() if isinstance(elem, Dado)) == 1:
             self.rondaex = AC
             self.NoObligar[i_jugador_con_un_dado] = 0
             return True
