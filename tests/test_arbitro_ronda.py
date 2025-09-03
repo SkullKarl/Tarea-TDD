@@ -82,9 +82,9 @@ def test_calzar_exito(arbitro):
     cacho2 = arbitro.cacho_jugadores[1]
     cacho3 = arbitro.cacho_jugadores[2]
 
-    cacho1.obtener_dados.return_value = [1, 2, 1, 2]
-    cacho2.obtener_dados.return_value = [3, 4]
-    cacho3.obtener_dados.return_value = [5, 6]
+    cacho1.GetDados.return_value = [1, 2, 1, 2]
+    cacho2.GetDados.return_value = [3, 4]
+    cacho3.GetDados.return_value = [5, 6]
 
     jugador_ganador, jugador_perdedor, total_pintas = arbitro.calzar(
         pinta_cantada=pinta_cantada,
@@ -108,9 +108,9 @@ def test_calzar_fracaso(arbitro):
     cacho2 = arbitro.cacho_jugadores[1]
     cacho3 = arbitro.cacho_jugadores[2]
 
-    cacho1.obtener_dados.return_value = [1, 2, 1, 2]
-    cacho2.obtener_dados.return_value = [3, 4]
-    cacho3.obtener_dados.return_value = [5, 6]
+    cacho1.GetDados.return_value = [1, 2, 1, 2]
+    cacho2.GetDados.return_value = [3, 4]
+    cacho3.GetDados.return_value = [5, 6]
 
     jugador_ganador, jugador_perdedor, total_pintas = arbitro.calzar(
         pinta_cantada=pinta_cantada,
@@ -133,9 +133,9 @@ def test_calzar_llama_puede_calzar(arbitro, mocker):
     cacho2 = arbitro.cacho_jugadores[1]
     cacho3 = arbitro.cacho_jugadores[2]
 
-    cacho1.obtener_dados.return_value = [1, 2, 1, 2]
-    cacho2.obtener_dados.return_value = [3, 4]
-    cacho3.obtener_dados.return_value = [5, 6]
+    cacho1.GetDados.return_value = [1, 2, 1, 2]
+    cacho2.GetDados.return_value = [3, 4]
+    cacho3.GetDados.return_value = [5, 6]
 
     # Verificamos que puede_calzar sea llamada una vez
     arbitro.calzar(
@@ -157,53 +157,53 @@ def test_puede_calzar_cumple_condicion_mitad(arbitro):
     cacho2 = arbitro.cacho_jugadores[1]
     cacho3 = arbitro.cacho_jugadores[2]
 
-    cacho1.obtener_dados.return_value = [1, 2, 1, 2]
-    cacho2.obtener_dados.return_value = [3, 4]
-    cacho3.obtener_dados.return_value = [5, 6]
+    cacho1.GetDados.return_value = [1, 2, 1, 2]
+    cacho2.GetDados.return_value = [3, 4]
+    cacho3.GetDados.return_value = [5, 6]
 
     # 3 jugadores * 5 dados = 15 dados iniciales
     # Mitad de dados iniciales = 7.5 ~ 7
     # Dados en juego: 8 (cumple condición para calzar)
-    assert arbitro.puede_calzar(jugador_calzador="J1", cacho_jugadores=arbitro.cacho_jugadores) == True
+    assert arbitro.puede_calzar(jugador_calzador="J1") == True
 
 def test_puede_calzar_no_cumple_condicion_mitad(arbitro):
     cacho1 = arbitro.cacho_jugadores[0]
     cacho2 = arbitro.cacho_jugadores[1]
     cacho3 = arbitro.cacho_jugadores[2]
 
-    cacho1.obtener_dados.return_value = [1, 2]
-    cacho2.obtener_dados.return_value = [3, 4]
-    cacho3.obtener_dados.return_value = [5, 6]
+    cacho1.GetDados.return_value = [1, 2]
+    cacho2.GetDados.return_value = [3, 4]
+    cacho3.GetDados.return_value = [5, 6]
 
     # 3 jugadores * 5 dados = 15 dados iniciales
     # Mitad de dados iniciales = 7.5 ~ 7
     # Dados en juego: 6, no cumple condición para calzar
-    assert arbitro.puede_calzar(jugador_calzador="J1", cacho_jugadores=arbitro.cacho_jugadores) == False
+    assert arbitro.puede_calzar(jugador_calzador="J1") == False
 
 def test_puede_calzar_cumple_condicion_un_dado(arbitro):
     cacho1 = arbitro.cacho_jugadores[0]
     cacho2 = arbitro.cacho_jugadores[1]
     cacho3 = arbitro.cacho_jugadores[2]
 
-    cacho1.obtener_dados.return_value = [3]
-    cacho2.obtener_dados.return_value = [3, 4]
-    cacho3.obtener_dados.return_value = [5, 6]
+    cacho1.GetDados.return_value = [3]
+    cacho2.GetDados.return_value = [3, 4]
+    cacho3.GetDados.return_value = [5, 6]
 
     # J1 está calzando y tiene un dado, cumple condición para calzar
-    assert arbitro.puede_calzar(jugador_calzador="J1", cacho_jugadores=arbitro.cacho_jugadores) == True
+    assert arbitro.puede_calzar(jugador_calzador="J1") == True
 
 def test_puede_calzar_no_cumple_ninguna_condicion(arbitro):
     cacho1 = arbitro.cacho_jugadores[0]
     cacho2 = arbitro.cacho_jugadores[1]
     cacho3 = arbitro.cacho_jugadores[2]
 
-    cacho1.obtener_dados.return_value = [3, 4]
-    cacho2.obtener_dados.return_value = [3, 4]
-    cacho3.obtener_dados.return_value = [5, 6]
+    cacho1.GetDados.return_value = [3, 4]
+    cacho2.GetDados.return_value = [3, 4]
+    cacho3.GetDados.return_value = [5, 6]
 
     # J1 está calzando pero no tiene un solo dado, ni hay suficientes dados, 
     # no cumple condición para calzar
-    assert arbitro.puede_calzar(jugador_calzador="J1", cacho_jugadores=arbitro.cacho_jugadores) == False
+    assert arbitro.puede_calzar(jugador_calzador="J1") == False
 
 
 # =========================================== Tests de ronda especial ===========================================
@@ -234,7 +234,7 @@ def test_dudar_ronda_especial_ases_no_son_comodines_pierde_apostador(arbitro):
     assert total_pintas == 3
     arbitro._mock_contador.contar_pintas.assert_called_once_with(
         pinta_cantada,
-        contar_ases_como_comodines=False
+        ases_comodines=False
     )
 
 def test_dudar_ronda_especial_ases_no_son_comodines_pierde_dudor(arbitro):
@@ -259,7 +259,7 @@ def test_dudar_ronda_especial_ases_no_son_comodines_pierde_dudor(arbitro):
     assert total_pintas == 3
     arbitro._mock_contador.contar_pintas.assert_called_once_with(
         pinta_cantada,
-        contar_ases_como_comodines=False
+        ases_comodines=False
     )
 
     
