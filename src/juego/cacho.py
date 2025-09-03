@@ -7,8 +7,6 @@ class Cacho:
         pass
 
     def GetDados(self):
-        if (self.__visible == False):
-            return None
         return self.__dado
 
     def agitar(self):
