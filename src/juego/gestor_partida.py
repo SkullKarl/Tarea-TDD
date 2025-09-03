@@ -76,20 +76,23 @@ class GestorPartida:
         if dudo:
             ganador, perdedor, pintas = self.Arbitro.dudar(p_c, c_c, j_a, j_d)
             indexperdedor = self.nombres.index(perdedor)
-            self.jugadores[indexperdedor].quitar_dado()
+            if self.jugadores[indexperdedor] is not None:
+                self.jugadores[indexperdedor].quitar_dado()
 
         if calzar:
             if self.Arbitro.puede_calzar(j_d):
                 ganador, perdedor, pintas = self.Arbitro.calzar(p_c, c_c, j_d)
                 indexganador = self.nombres.index(ganador)
 
-                if len(self.jugadores[indexganador].GetDados()) == 5:
-                    self.DadosAFavor[indexganador] = self.DadosAFavor[indexganador] + 1
-                else:
-                    self.jugadores[indexganador].agregar_dado()
+                if self.jugadores[indexganador] is not None:
+                    if len(self.jugadores[indexganador].GetDados() or []) == 5:
+                        self.DadosAFavor[indexganador] = self.DadosAFavor[indexganador] + 1
+                    else:
+                        self.jugadores[indexganador].agregar_dado()
 
                 indexperdedor = self.nombres.index(perdedor)
-                self.jugadores[indexperdedor].quitar_dado()
+                if self.jugadores[indexperdedor] is not None:
+                    self.jugadores[indexperdedor].quitar_dado()
 
         for i in range (len(self.jugadores)):
             if self.jugadores[i] is None:
