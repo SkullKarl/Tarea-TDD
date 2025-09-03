@@ -145,6 +145,26 @@ def test_calzar_llama_puede_calzar(arbitro, mocker):
     )
     assert spy.call_count == 1
 
+
+def test_calzar_apuesta_invalida(arbitro):
+    cacho1 = arbitro.cacho_jugadores[0]
+    cacho2 = arbitro.cacho_jugadores[1]
+    cacho3 = arbitro.cacho_jugadores[2]
+
+    cacho1.GetDados.return_value = [1, 2]
+    cacho2.GetDados.return_value = [3, 4]
+    cacho3.GetDados.return_value = [5, 6]
+
+    # Llama a calzar con una apuesta cualquiera, no importa el valor porque no se puede calzar
+    resultado = arbitro.calzar(
+        pinta_cantada=3,
+        cantidad_cantada=5,
+        jugador_calzador="J1"
+    )
+
+    # Debe retornar (None, None, 0) porque no se puede calzar
+    assert resultado == (None, None, 0)
+
 # =========================================== Tests de puede_calzar ===========================================
 
 def test_puede_calzar_cumple_condicion_mitad(arbitro):
