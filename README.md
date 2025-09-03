@@ -14,7 +14,7 @@ Este proyecto implementa la lógica y pruebas para el juego de dados **Dudo** ut
 1. **Clone el repositorio:**
 
    ```sh
-   git clone <URL-del-repositorio>
+   git clone https://github.com/SkullKarl/Tarea-TDD.git
    cd Tarea-TDD
 2. **Instale las dependencias:**
     ```sh
