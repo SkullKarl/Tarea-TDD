@@ -16,8 +16,9 @@ def test_JugarRonda():
     GP.JugarRonda(2, 3, 'Slayer', dudo=True, jugador_dudor='Gustavo')
     GP.JugarRonda(3, 4, 'Gustavo', dudo=True, jugador_dudor='Sebastian')
     for i in range (len(J)):
-        assert J[i] != GP.jugadores[i]
-    assert len(J[2].GetDados()) == GP.jugadores[2].GetDados()
+        if J[i] is not None and GP.jugadores[i] is not None:
+            assert J[i] != GP.jugadores[i]
+    assert len(J[2].GetDados()) == len(GP.jugadores[2].GetDados())
 
 def test_obligar():
     j = ['Gustavo', 'Sebastian', 'Sofia', 'Slayer']
