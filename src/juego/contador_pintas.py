@@ -5,7 +5,7 @@ class ContadorPintas:
     def contar_pintas(self, pinta_cantada, ases_comodines=True):
         total = 0
         for cacho in self.cacho_jugadores:
-            for dado in cacho.obtener_dados():
+            for dado in cacho.GetDados():
                 if pinta_cantada == 1:
                     # Solo cuentan los unos
                     if dado == 1:

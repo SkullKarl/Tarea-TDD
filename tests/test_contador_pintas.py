@@ -6,7 +6,7 @@ def crear_cacho(mocker):
     def _crear(valores):
         cacho = mocker.Mock()
         cacho.dados = valores
-        cacho.obtener_dados.return_value = valores
+        cacho.GetDados.return_value = valores
         return cacho
     return _crear
 
