@@ -95,7 +95,8 @@ class GestorPartida:
             if self.jugadores[i] is None:
                 continue
 
-            if not any(isinstance(dado, Dado) for dado in self.jugadores[i].GetDados()):
+            dados = self.jugadores[i].GetDados() or []
+            if not any(isinstance(dado, Dado) for dado in dados):
                 self.jugadores[i] = None
 
         if self.rondaex != ObligarOpciones.No:
