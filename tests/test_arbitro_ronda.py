@@ -164,7 +164,7 @@ def test_puede_calzar_cumple_condicion_mitad(arbitro):
     # 3 jugadores * 5 dados = 15 dados iniciales
     # Mitad de dados iniciales = 7.5 ~ 7
     # Dados en juego: 8 (cumple condición para calzar)
-    assert arbitro.puede_calzar(jugador_calzador="J1", cacho_jugadores=arbitro.cacho_jugadores) == True
+    assert arbitro.puede_calzar(jugador_calzador="J1") == True
 
 def test_puede_calzar_no_cumple_condicion_mitad(arbitro):
     cacho1 = arbitro.cacho_jugadores[0]
@@ -178,7 +178,7 @@ def test_puede_calzar_no_cumple_condicion_mitad(arbitro):
     # 3 jugadores * 5 dados = 15 dados iniciales
     # Mitad de dados iniciales = 7.5 ~ 7
     # Dados en juego: 6, no cumple condición para calzar
-    assert arbitro.puede_calzar(jugador_calzador="J1", cacho_jugadores=arbitro.cacho_jugadores) == False
+    assert arbitro.puede_calzar(jugador_calzador="J1") == False
 
 def test_puede_calzar_cumple_condicion_un_dado(arbitro):
     cacho1 = arbitro.cacho_jugadores[0]
@@ -190,7 +190,7 @@ def test_puede_calzar_cumple_condicion_un_dado(arbitro):
     cacho3.obtener_dados.return_value = [5, 6]
 
     # J1 está calzando y tiene un dado, cumple condición para calzar
-    assert arbitro.puede_calzar(jugador_calzador="J1", cacho_jugadores=arbitro.cacho_jugadores) == True
+    assert arbitro.puede_calzar(jugador_calzador="J1") == True
 
 def test_puede_calzar_no_cumple_ninguna_condicion(arbitro):
     cacho1 = arbitro.cacho_jugadores[0]
@@ -203,7 +203,7 @@ def test_puede_calzar_no_cumple_ninguna_condicion(arbitro):
 
     # J1 está calzando pero no tiene un solo dado, ni hay suficientes dados, 
     # no cumple condición para calzar
-    assert arbitro.puede_calzar(jugador_calzador="J1", cacho_jugadores=arbitro.cacho_jugadores) == False
+    assert arbitro.puede_calzar(jugador_calzador="J1") == False
 
 
 # =========================================== Tests de ronda especial ===========================================

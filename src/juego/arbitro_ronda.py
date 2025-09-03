@@ -1,8 +1,9 @@
 from src.juego.dado import Dado
 from src.juego.contador_pintas import ContadorPintas
+from src.juego.cacho import Cacho
 
 class ArbitroRonda:
-    def __init__(self, jugadores, cacho_jugadores):
+    def __init__(self, jugadores : list[str], cacho_jugadores : list[Cacho]):
         self.jugadores = jugadores
         self.cacho_jugadores = cacho_jugadores
         self.contador = ContadorPintas(cacho_jugadores)
@@ -17,14 +18,20 @@ class ArbitroRonda:
         for cacho in self.cacho_jugadores:
             cacho.ocultar()
 
-    # ========================== Función dudar ===========================
-    def dudar(self, pinta_cantada, cantidad_cantada, jugador_apostador, jugador_dudor):
-        self._mostrar_cachos()
-        
-        total_pintas = self.contador.contar_pintas(
+    def _contar_pintas(self, pinta_cantada : int) -> int:
+        return self.contador.contar_pintas(
             pinta_cantada,
             contar_ases_como_comodines=not self.ronda_especial
         )
+
+    # ========================== Función dudar ===========================
+    def dudar(self, pinta_cantada : int,
+                cantidad_cantada : int,
+                jugador_apostador : str,
+                jugador_dudor : str) -> tuple[str | None, str | None, int]:
+        
+        self._mostrar_cachos()
+        total_pintas = self._contar_pintas(pinta_cantada)
 
         # Determinar ganador y perdedor
         if total_pintas >= cantidad_cantada:
@@ -41,10 +48,12 @@ class ArbitroRonda:
         return jugador_ganador, jugador_perdedor, total_pintas
     
     # ========================== Función calzar ==========================
-    def calzar(self, pinta_cantada, cantidad_cantada, jugador_calzador):
+    def calzar(self, pinta_cantada : int,
+                cantidad_cantada : int,
+                jugador_calzador : str) -> tuple[str | None, str | None, int]:
+        
         # Si no se puede calzar en este turno, no altera nada
-        # (evaluar proximamente si a gestor_partida le sirve una exception aquí)
-        if self.puede_calzar(jugador_calzador, self.cacho_jugadores) == False:
+        if self.puede_calzar(jugador_calzador) == False:
             jugador_ganador = None
             jugador_perdedor = None
             total_pintas = 0
@@ -53,10 +62,7 @@ class ArbitroRonda:
 
         self._mostrar_cachos()
 
-        total_pintas = self.contador.contar_pintas(
-            pinta_cantada,
-            contar_ases_como_comodines=not self.ronda_especial
-        )
+        total_pintas = self._contar_pintas(pinta_cantada)
 
         # Si calza exactamente, gana el calzador
         if total_pintas == cantidad_cantada:
@@ -70,9 +76,9 @@ class ArbitroRonda:
         return jugador_ganador, jugador_perdedor, total_pintas
     
     # ================ Función de validación para calzar =================
-    def puede_calzar(self, jugador_calzador, cacho_jugadores):
-        total_dados = sum(len(cacho.obtener_dados()) for cacho in cacho_jugadores)
-        dados_iniciales = len(cacho_jugadores) * 5
+    def puede_calzar(self, jugador_calzador : str) -> bool:
+        total_dados = sum(len(cacho.obtener_dados()) for cacho in self.cacho_jugadores)
+        dados_iniciales = len(self.cacho_jugadores) * 5
 
         # Caso 1: mitad o mayor que dados iniciales
         if total_dados >= dados_iniciales / 2:
@@ -80,7 +86,7 @@ class ArbitroRonda:
 
         # Caso 2: jugador calzó con un solo dado
         idx = self.jugadores.index(jugador_calzador)
-        if len(cacho_jugadores[idx].obtener_dados()) == 1:
+        if len(self.cacho_jugadores[idx].obtener_dados()) == 1:
             return True
 
         # Caso 3: no cumplimos condiciones para calzar
