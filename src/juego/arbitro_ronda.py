@@ -12,10 +12,16 @@ class ArbitroRonda:
     # ============================= Funciones auxiliares =============================
     def _mostrar_cachos(self):
         for cacho in self.cacho_jugadores:
+            if cacho is None:
+                continue
+
             cacho.mostrar()
 
     def _ocultar_cachos(self):
         for cacho in self.cacho_jugadores:
+            if cacho is None:
+                continue
+
             cacho.ocultar()
 
     def _contar_pintas(self, pinta_cantada : int) -> int:
