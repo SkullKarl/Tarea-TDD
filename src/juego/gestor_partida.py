@@ -92,6 +92,9 @@ class GestorPartida:
                 self.jugadores[indexperdedor].quitar_dado()
 
         for i in range (len(self.jugadores)):
+            if self.jugadores[i] is None:
+                continue
+
             if not any(isinstance(dado, Dado) for dado in self.jugadores[i].GetDados()):
                 self.jugadores[i] = None
 
